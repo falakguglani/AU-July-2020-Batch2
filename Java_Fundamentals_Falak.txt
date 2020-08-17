@@ -1,0 +1,465 @@
+PPT Assignment
+
+Ques 1:-BODMAS
+
+import java.util.Stack;
+
+class Solve {
+    public int evaluate(String s)
+    {
+        char[] c =s.toCharArray();//Converting String to Array
+        Stack<Integer> values = new Stack<>();//To store values
+        Stack<Character> ops = new Stack<>();//To store operation;
+        int i=0;
+        int n=c.length;
+        /*
+        Stack will be used to store values of both operations and operands but it will fail in  two scenarios
+        1->One when we have a negative/positive sign in front then operations will be equal to operands e.g. -8+5
+        2->If we have two signs one after another eg. 3+-3
+        In these scenarios we need to make sure we take -3 as a operand not as operand+operaion
+        */
+        while(i<n)
+        {
+            char cx=c[i];
+
+            if(cx==' ')
+            {
+                i++;
+                continue;
+            }
+            //Making sure of the above mentioned condition
+            else if(cx>='0' && cx<='9' || ((cx=='-' || cx=='+') && (i==0) ||  (i>0 && (c[i-1]=='+' || c[i-1]=='-' || c[i-1]=='/' || c[i-1]=='*' || c[i-1]=='%'))))
+            {
+                StringBuilder bf=new StringBuilder();
+                bf.append(c[i++]);
+                while(i<n && ((c[i]>='0' && c[i]<'9')))
+                {
+                    bf.append(c[i++]);
+                }
+                values.push(Integer.parseInt(bf.toString()));
+                continue;
+            }
+
+            else if(cx=='(')ops.push(cx);
+
+            else if(cx==')')
+            {
+                while(ops.peek()!='(')
+                {
+                    values.push(applyOperation(ops.pop(),values.pop(),values.pop()));
+                }
+                ops.pop();
+            }
+
+            else if(cx=='+'  || cx=='/' || cx=='%' || cx=='*' || cx=='-')
+            {
+                while (!ops.isEmpty() && checkPrecedence(cx, ops.peek()) && values.size()>1)
+                    values.push(applyOperation(ops.pop(), values.pop(), values.pop()));
+                ops.push(cx);
+            }
+            else
+            {
+                return Integer.MAX_VALUE;
+            }
+            i++;
+        }
+
+        while (!ops.empty()) //when all the length of string is finished we will calculate using values left in stack
+        {
+            values.push(applyOperation(ops.pop(), values.pop(), values.pop()));
+            //System.out.println(values.peek());
+        }
+        return values.pop();
+    }
+
+    public static boolean checkPrecedence(char op1, char op2)
+    {
+        if (op2 == '(' || op2 == ')')
+            return false;
+        else if ((op1 == '*' || op1 == '/' || op1=='%') && (op2 == '+' || op2=='-'))
+            return false;
+        else
+            return true;
+    }
+
+    public static int applyOperation(char op, int b, int a)
+    {
+        switch (op)
+        {
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                if (b == 0)
+                    throw new
+                            UnsupportedOperationException("Cant divide by zero");
+                return a / b;
+            case '%':
+                if(a<0)
+                {
+                    return -(-a%b);
+                }
+                if (b == 0)
+                    throw new
+                            UnsupportedOperationException("Cant divide by zero");
+                return a % b;
+        }
+        return 0;
+    }
+}
+
+public class Evaluate {
+    public static void main(String[] args)
+    {
+        Solve s=new Solve();
+        System.out.println("-5+8*6");
+        System.out.println(s.evaluate("-5+8*6"));
+        System.out.println("(55+9)%9");
+        System.out.println(s.evaluate("(55+9)%9"));
+        System.out.println("20+-3*5/8");
+        System.out.println(s.evaluate("20+-3*5/8"));
+        System.out.println("5+15/3*2-8%3");
+        System.out.println(s.evaluate("5+15/3*2-8%3"));
+
+    }
+}
+
+Output:-
+
+-5+8*6
+43
+(55+9)%9
+1
+20+-3*5/8
+19
+5+15/3*2-8%3
+13
+
+
+Ques 2:Print Flag of America
+
+Solution:-
+
+class America
+{
+   void printFlag()
+   {
+       int line=9;
+        while(line-->0)
+            {
+                for(int i=0;i<6;i++) System.out.print("* ");
+                System.out.print(" ");
+                for(int i=0;i<10;i++) System.out.print("==");   
+                System.out.println();
+                if(line-->0)
+                {    
+                for(int i=0;i<5;i++) System.out.print(" *");
+                System.out.print("   ");
+                for(int i=0;i<10;i++) System.out.print("==");
+                System.out.println();
+                }
+            }
+            for(int i=0;i<7;i++)
+            {
+            for(int j=0;j<33;j++) System.out.print("=");   
+            System.out.println();
+            }
+   }
+}
+
+
+public class Main {
+    public static void main(String args[]) {
+        America a=new America();
+        a.printFlag();
+    }
+}
+
+Output:-
+
+
+
+* * * * * *  ====================
+ * * * * *   ====================
+* * * * * *  ====================
+ * * * * *   ====================
+* * * * * *  ====================
+ * * * * *   ====================
+* * * * * *  ====================
+ * * * * *   ====================
+* * * * * *  ====================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+=================================
+
+
+Home Assignment:-
+
+Ques 1:-Write a Java program to replace each substring of a given string that matches the given regular expression with the given replacement.
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Evaluate {
+    public static void main(String[] args)
+    {
+        String regex="Lion";//String to be replaced
+        String line = "Lion is the king of the jungle.Lion is a dangerous animal";
+        String pattern = "Dog";//String that will replace
+        
+        //We can put any regex here
+        
+        Pattern r = Pattern.compile(regex);
+        Matcher m = r.matcher(line);
+        line = m.replaceAll(pattern);
+        System.out.println(line);
+
+    }
+}
+
+oUTPUT:-
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Evaluate {
+    public static void main(String[] args)
+    {
+        String regex="Lion";//String to be replaced
+        String line = "Lion is the king of the jungle.Lion is a dangerous animal";
+        String pattern = "Dog";//String that will replace
+        
+        //We can put any regex here
+        
+        Pattern r = Pattern.compile(regex);
+        Matcher m = r.matcher(line);
+        line = m.replaceAll(pattern);
+        System.out.println(line);
+
+    }
+}
+
+Home Assignment
+
+Q1:-Write a Java program to replace each substring of a given string that matches the given regular expression with the given replacement.
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Evaluate {
+    public static void main(String[] args)
+    {
+        String regex="Lion";//String to be replaced
+        String line = "Lion is the king of the jungle.Lion is a dangerous animal";
+        String pattern = "Dog";//String that will replace
+
+        //We can put any regex here
+
+        Pattern r = Pattern.compile(regex);
+        Matcher m = r.matcher(line);
+        line = m.replaceAll(pattern);
+        System.out.println(line);
+
+    }
+}
+
+Output:-
+
+Dog is the king of the jungle.Dog is a dangerous animal
+
+Q2:-Write a Java program to get a reverse order view of the keys contained in a given map
+
+//HashMap,LinkedHashMap does not have any pre defined method because of there use case so I have implemented TreeMap.For other maps we can transfer the keys to a certain List and then //iterate it reverse order. 
+
+import java.util.*;
+
+public class Evaluate {
+    public static void main(String args[])
+    {
+        // Map to store the elements
+        Map<String, String> treemap = new TreeMap<String, String>(Collections.reverseOrder());
+
+        // Put elements to the map
+        treemap.put("a", "Welcome");
+        treemap.put("b", "to");
+        treemap.put("c", "the");
+        treemap.put("d", "Accolite");
+        treemap.put("e", "India");
+        treemap.put("f", "Community");
+
+	System.out.println("Map-View");
+	
+        for(String me: treemap.keySet())
+        {
+            System.out.println(me);
+        }
+    }
+}
+
+Output:-
+
+Map-View
+f
+e
+d
+c
+b
+a
+
+Ques:-3 Write your own unchecked Exception and throw it from you counter programme which counts 1 to 100.When you get Prime no while counting then throw this Exception and catch this to print you exception message.
+
+import java.util.*;
+
+class primeNumberException
+        extends RuntimeException {
+    public primeNumberException(String errorMessage) {
+        super(errorMessage);
+    }
+}
+
+public class Evaluate
+{
+    static boolean prime[];
+    public static void calc()
+    {
+        prime=new boolean[101];
+        Arrays.fill(prime,true);
+        prime[0]=prime[1]=false;
+        for(int i=4;i< prime.length;i+=2)prime[i]=false;
+        for(int i=3;i*i< prime.length;i+=2)
+        {
+            for(int j=i*i;j< prime.length;j+=i)
+            {
+                if(prime[i])
+                {
+                    prime[j]=false;
+                }
+            }
+        }
+
+    }
+    public static void main(String[] args)
+    {
+        calc();
+        try
+        {
+            for(int i=1;i<=100;i++)
+            {
+                if(prime[i])
+                {
+                    throw new primeNumberException("prime Number Found");
+                }
+                else
+                {
+                    System.out.println(i);
+                }
+            }
+        }
+        catch (primeNumberException err)
+        {
+                throw new primeNumberException("prime Number found");
+        }
+    }
+}
+
+Solution:-
+
+1
+Exception in thread "main" primeNumberException: prime Number found
+	at Evaluate.main(Evaluate.java:50)
+
+Ques:-4 Write a programme to serialize 3 fields out of 5 and deserialize it. Use UUID to prevent object mutation.
+
+Solution:
+
+//I could not understand about object mutation so did not use UUID
+
+import java.io.*;
+
+class Student implements java.io.Serializable {
+    String name;
+    String age;
+    String classes;
+    transient String address;
+    transient String grade;
+    Student(String name, String age, String classes,String address,String grade)
+    {
+        this.name=name;
+        this.age=age;
+        this.classes=classes;
+        this.address=address;
+        this.grade=grade;
+    }
+}
+
+class serializeDeserialise
+{
+    public void serialise(Student s)
+    {
+        try
+        {
+            FileOutputStream fileOut = new FileOutputStream("student.txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(s);
+            out.close();
+            fileOut.close();
+            System.out.println("Serialized data is saved in student.txt");
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error Occured");
+        }
+    }
+
+    public void deserialse()
+    {
+        Student s = null;
+        try
+        {
+            FileInputStream fileIn = new FileInputStream("student.txt");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            s = (Student) in.readObject();
+            in.close();
+            fileIn.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Issue with the file"+e);
+        }
+        catch (ClassNotFoundException c) {
+            System.out.println("Student class not found"+c);
+        }
+
+        System.out.println("Student Details Deserialised");
+        System.out.println("Name: " + s.name);
+        System.out.println("Age: " + s.age);
+        System.out.println("Class: " + s.classes);
+    }
+}
+
+public class Evaluate
+{
+
+    public static void main(String[] args)
+    {
+        Student s=new Student("Falak","22","Accolite Graduate","Panipat","A");
+        serializeDeserialise sd=new serializeDeserialise();
+        sd.serialise(s);
+        sd.deserialse();
+    }
+}
+
+Output:
+
+Serialized data is saved in student.txt
+Student Details Deserialised
+Name: Falak
+Age: 22
+Class: Accolite Graduate

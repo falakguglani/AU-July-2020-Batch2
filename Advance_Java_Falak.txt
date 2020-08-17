@@ -1,0 +1,575 @@
+1) Create a functional interface and use - lambda, static method, instance method and contructor references to instantiate it.
+
+Solution:-
+
+import java.util.function.Function;
+
+interface hello{
+    static void hello() {
+        System.out.println("Hi from static interface refernece");
+    }
+}
+
+class introduction implements hello{
+
+    introduction()
+    {
+        hello.hello();
+    }
+}
+
+@FunctionalInterface
+interface MyFunctionalInterface {
+    Student getStudent(String name);
+}
+
+class Student {
+    private String name;
+    public Student(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+public class Evaluate{
+    public static void main(String[] args)
+    {
+        //static expression
+        introduction i=new introduction();
+        //Constructor Reference
+        MyFunctionalInterface mf = Student::new;//Instance Method
+
+        Function<String, Student> f1 = Student::new;    // Constructor Reference
+        Function<String, Student> f2 = (name) -> new Student(name);//Lambda Expression
+
+        System.out.println(mf.getStudent("Veeru").getName());
+        System.out.println(f1.apply("Jai").getName());
+        System.out.println(f2.apply("Gabbar").getName());
+    }
+}
+
+Output:-
+
+Hi from static interface refernece
+Veeru
+Jai
+Gabbar
+
+
+2) Demonstrate that local variable used in lamda expression must be final or effectively final and instance variable can be changed inside the lambda expression.
+
+
+@FunctionalInterface
+interface add
+{
+    int add(int a1,int a2);
+}
+
+public class Evaluate{
+    public static void main(String[] args)
+    {
+        final int x=1;
+        int y=2;
+        int z=3;
+        z=4;
+        int a=0;
+
+        //This wont run as z value is changed as value of z is neither final nor effectively  final
+        //add add= (b,c) ->{
+            //return c+b+z;
+        //};
+
+
+        add add= (b,c) ->{
+            return c+b+x+y;
+        };
+        System.out.println(add.add(1,2));
+
+    }
+}
+
+We can change value inside lambda expression with 3 potential solutions:
+
+1. Making the variable static.
+2. Use Array
+3. Atomic Integer
+
+
+3) Create a Product class having properties like name,category, price .Create a ProductFactory class which gives you the List of products when you pass the number of Products.
+   Now use stream Api -
+	1) To get the list of products whose price range is between x and y.(You can assume x and y yourself)
+	2) To get the total categories in the product list.
+	3) To get the maximum and minimum priced product in each category.
+	
+Solution:-
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+class Product{
+    String name;
+    String category;
+    int price;
+
+    public Product(String name, String category, int price) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+}
+
+class ProductFactory
+{
+    int quantity;
+    ArrayList<Product> a;
+    public ProductFactory(int quantity) {
+        this.quantity = quantity;
+        a=new ArrayList<Product>();
+        createProducts();
+    }
+
+    private void createProducts()
+    {
+        Random random=new Random();
+        for(int i=1;i<=quantity;i++)
+        {
+            a.add(new Product(Integer.toString(i),Integer.toString(random.nextInt((quantity+1)/2)+1),i*10));
+        }
+        printProduct();
+    }
+
+    private void printProduct()
+    {
+        System.out.println("Products Available are");
+        System.out.println("Name Category Price");
+        for(Product p:a)
+        {
+            System.out.print(p.name+"      "+p.category+"      "+p.price);
+            System.out.println();
+        }
+    }
+}
+
+public class Evaluate{
+        public static void main(String args[])
+        {
+            //Create number of products
+            ProductFactory pf=new ProductFactory(5);
+            //Elements between 20 and 50 rupees
+            List<Product> filterList=pf.a.stream().filter(p-> p.price>=20 && p.price<=50).collect(Collectors.toList());
+            filterList.forEach(p-> System.out.print(p.name+" "));
+            System.out.println();
+            //Total Categories in product list
+            List<String> productList=pf.a.stream().map(p-> p.category).collect(Collectors.toList());
+            List<String> count=productList.stream().distinct().collect(Collectors.toList());
+            System.out.println("Distinct Products:-"+count.size());
+            //Minimum and Maximum product in each category
+            //Could not understand
+
+
+        }
+    }
+
+Output:-
+
+Products Available are
+Name Category Price
+1      1      10
+2      3      20
+3      2      30
+4      3      40
+5      2      50
+2 3 4 5 
+Distinct Products:-3
+
+
+	
+4) Find the replacement of continue keyword when you are iterating over a collection using forEach() method.
+   eg-List<integer> ints=new ArrayList<>();
+      ints.forEach(x->System.out.println(x))
+	  
+Now using this method if we want to skip some object contditionally. Then How are we gonna do. (In for loop we have continue keyword but here how we'll do)
+Please write a program for the same.
+
+Solution:-
+
+//Not confident over this but I tried adding if else in forEach inside Lambda Function
+
+import java.util.*;
+    class Evaluate{
+        public static void main(String args[])
+        {
+            List<Integer> ints=new ArrayList<>();
+
+            for(int i=0;i<10;i++)ints.add(i);
+
+            ints.forEach(x-> {
+                if(x%2==0)
+                System.out.println(x);
+            });
+        }
+    }
+
+Output:-
+
+0
+2
+4
+6
+8
+
+5) Establish a jdbc connection to a database and print first 10 rows of the table.
+
+Solution:-
+
+import java.sql.*;
+class Evaluate{
+    public static void main(String args[]){
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/mysql","root","falak@123");
+            Statement stmt=con.createStatement();
+            ResultSet rs=stmt.executeQuery("select * from temp");
+            int count=10;
+            while(rs.next() && count-->0)
+                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
+            con.close();
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}
+
+
+6) Create a dummy xml and parse and print its data using java program.
+
+Solution:-
+
+import java.io.File;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+
+public class Evaluate {
+
+    public static void main(String[] args) {
+
+        try {
+            File inputFile = new File("C:\\Users\\Mastercool\\Documents\\sample.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(inputFile);
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            NodeList nList = doc.getElementsByTagName("food");
+            System.out.println("----------------------------");
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                Node nNode = nList.item(temp);
+                System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
+                    System.out.println("Name : "
+                            + eElement
+                            .getElementsByTagName("name")
+                            .item(0)
+                            .getTextContent());
+                    System.out.println("Price : "
+                            + eElement
+                            .getElementsByTagName("price")
+                            .item(0)
+                            .getTextContent());
+                    System.out.println("Description : "
+                            + eElement
+                            .getElementsByTagName("description")
+                            .item(0)
+                            .getTextContent());
+                    System.out.println("Calories : "
+                            + eElement
+                            .getElementsByTagName("calories")
+                            .item(0)
+                            .getTextContent());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+Output:-
+
+Root element :breakfast_menu
+----------------------------
+
+Current Element :food
+Name : Belgian Waffles
+Price : $5.95
+Description : Two of our famous Belgian Waffles with plenty of real maple syrup
+Calories : 650
+
+Current Element :food
+Name : Strawberry Belgian Waffles
+Price : $7.95
+Description : Light Belgian waffles covered with strawberries and whipped cream
+Calories : 900
+
+Current Element :food
+Name : Berry-Berry Belgian Waffles
+Price : $8.95
+Description : Light Belgian waffles covered with an assortment of fresh berries and whipped cream
+Calories : 900
+
+Current Element :food
+Name : French Toast
+Price : $4.50
+Description : Thick slices made from our homemade sourdough bread
+Calories : 600
+
+Current Element :food
+Name : Homestyle Breakfast
+Price : $6.95
+Description : Two eggs, bacon or sausage, toast, and our ever-popular hash browns
+Calories : 950
+
+
+Ques -7) WAP to list all files from a directory recursively with Java.
+
+Solution:-
+
+import java.io.File;
+import java.util.Scanner;
+
+public class Evaluate
+{
+    static void recursivePrint(File[] arr, int index, int level)
+    {
+        if(index == arr.length)
+            return;
+        
+        for (int i = 0; i < level; i++)
+            System.out.print("\t");
+        
+        if(arr[index].isFile())
+            System.out.println(arr[index].getName());
+        
+        else if(arr[index].isDirectory())
+        {
+            System.out.println("(" + arr[index].getName() + ")");
+            recursivePrint(arr[index].listFiles(), 0, level + 1);
+        }
+
+        recursivePrint(arr,++index, level);
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println("Enter File path");
+        Scanner input=new Scanner(System.in);
+        String mainpath=input.next();
+
+        File path = new File(mainpath);
+
+        if(path.exists() && path.isDirectory())
+        {
+            File a[] = path.listFiles();
+            System.out.println("---------------------------------------");
+            System.out.println("Files from main directory : " + mainpath);
+            System.out.println("---------------------------------------");
+
+            recursivePrint(a,0,0);
+        }
+    }
+}
+
+Output:-
+
+Enter File path
+D:\Accolite
+---------------------------------------
+Files from main directory : D:\Accolite
+---------------------------------------
+[Assignments]
+	Assignment(Advance_Java).txt
+	Assignment(Java).txt
+	RDBMS_ER.png
+	SQL Assignment.txt
+[Ppts]
+	Advance Java.pptx
+	Git_and_GitBash.pdf
+	Java Fundamentals.pptx
+	RDBMS Concepts.pptx
+	SQL Concepts & Fundamentals AU 2020.pdf
+	~$Advance Java.pptx
+[Solutions]
+	output (1).txt
+	RDBMS_ER_Sol.JPEG
+	SQL-Assignment.docx
+	SQL-Assignment.pdf
+src.rar
+
+
+8) WAP to list out all files that are end with “.txt” extension in a folder, and then delete it.
+
+Solution:-
+
+import java.io.File;
+import java.util.Scanner;
+
+public class Evaluate
+{
+    static void recursivePrint(File[] arr, int index, int level)
+    {
+        if(index == arr.length)
+            return;
+
+        for (int i = 0; i < level; i++)
+            System.out.print("\t");
+
+        if(arr[index].isFile())
+        {
+            String f=arr[index].getName();
+            if(f.length()>4 && f.substring(f.length()-4,f.length()).equals(".txt"))
+            {
+                System.out.println(arr[index].getName());
+                arr[index].delete();
+                System.out.println(f+" deleted successfully");
+            }
+        }
+
+        else if(arr[index].isDirectory())
+        {
+            System.out.println("(" + arr[index].getName() + ")");
+            recursivePrint(arr[index].listFiles(), 0, level + 1);
+            System.out.println();
+        }
+
+        recursivePrint(arr,++index, level);
+    }
+
+    public static void main(String[] args)
+    {
+        System.out.println("Enter File path");
+        Scanner input=new Scanner(System.in);
+        String mainpath=input.nextLine();
+        File path = new File(mainpath);
+
+        if(path.exists())
+        {
+            File a[] = path.listFiles();
+            System.out.println("---------------------------------------");
+            System.out.println("Files from main directory : " + mainpath);
+            System.out.println("---------------------------------------");
+
+            recursivePrint(a,0,0);
+        }
+        else
+        {
+            System.out.println("Path error");
+        }
+    }
+}
+
+Output:-
+
+Enter File path
+---------------------------------------
+Files from main directory : D:\New folder
+---------------------------------------
+(New folder)
+	1.txt.txt
+1.txt.txt deleted successfully
+	2.txt
+2.txt deleted successfully
+	3.txt
+3.txt deleted successfully
+
+9) WAP to copy one file into another
+
+Solution:-
+
+import java.io.*;
+
+public class Evaluate
+{
+    private static void copyFile(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
+        public static void main(String[] args)
+    {
+        try
+        {
+            copyFile(new File("D:\\1.txt"), new File("D:\\2.txt"));
+            System.out.println("Copy Completed Successfully");
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+}
+
+Output:-
+
+Copy Completed Successfully
+
+10)WAP to copy a file from one dir to another dir..
+
+//By changing the value of destination we can copy the value in any directory.
+
+OR can also use FileUtils from Apache library
+
+private static void copyFileUsingApacheCommonsIO(File source, File dest) throws IOException {
+    FileUtils.copyFile(source, dest);
+}
+	
