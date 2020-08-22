@@ -1,0 +1,131 @@
+Solutions-->JS Assignment
+
+1.(a) Array Functions
+
+a=['banana','apple','oranges']
+b=['mango','papaya','melon']
+
+a.concat(b)
+//["banana", "apple", "oranges", "mango", "papaya", "melon"]
+
+a.every((d) =>d.length>=5)
+//true
+
+a.filter((d) =>d.length>=6)
+//["banana", "oranges"]
+
+a.forEach((d) =>{console.log("I love to eat"+d);})
+//1 I love to eatbanana
+//1 I love to eatapple
+//1 I love to eatoranges
+
+a.indexOf("apple")
+//1
+
+a.join()
+//"banana,apple,oranges"
+
+a.lastIndexOf("banana")
+//0
+
+a.map((d)=>d+"zzz")
+//["bananazzz", "applezzz", "orangeszzz"]
+
+a.pop()
+//"oranges"
+a
+//["banana", "apple"]
+
+a.push("oranges")
+//3
+
+a
+//["banana", "apple", "oranges"]
+
+a.reduce((d,e)=>d+" "+e)
+//"banana apple oranges"
+
+a.reduceRight((d,e)=>d+" "+e)
+//"oranges apple banana"
+
+a.reverse()
+//["oranges", "apple", "banana"]
+
+a.shift()
+//"oranges"
+
+a.slice(0,1)
+//["apple"]
+
+a=['banana','apple','oranges']
+//["banana", "apple", "oranges"]
+
+a.some((d)=>d.length==6)
+//true
+
+a.sort()
+//["apple", "banana", "oranges"]
+
+a.splice(1,2)
+//["banana", "oranges"]
+a
+//["apple"]
+
+b.toString()
+"mango,papaya,melon"
+
+b.unshift("kiwi")
+//4
+
+b
+//["kiwi", "mango", "papaya", "melon"]
+
+//String And RegEx expressions
+
+sent="Lets find what is happening.Lets do it."
+//"Lets find what is happening.Lets do it."
+
+sent.split(" ")
+//["Lets", "find", "what", "is", "happening.Lets", "do", "it."]
+
+sent.replace("Lets","Let")
+//"Let find what is happening.Lets do it."
+
+sent.search("happen")
+//18
+
+sent.search("happens")
+//-1
+
+sent.match("Let")
+//["Let", index: 0, input: "Lets find what is happening.Lets do it.", groups: undefined]
+
+string="LetsfindLetsFindit"
+//"LetsfindLetsFindit"
+
+pattern=/L[aei]?t/
+// /L[aei]?t/
+
+pattern.exec(string)
+//["Let", index: 0, input: "LetsfindLetsFindit", groups: undefined]
+
+pattern.test(string)
+//true
+
+
+2->Difference between \n and \r
+
+\n is the newline character 
+\r is the carriage return
+
+They differ in what uses them. 
+-Windows uses \r\n to signify the enter key was pressed
+-while Linux and Unix use \n to signify that the enter key was pressed.
+
+3->HTML page with Regex
+
+Along with this document
+
+4->Js program
+
+File along with the document
