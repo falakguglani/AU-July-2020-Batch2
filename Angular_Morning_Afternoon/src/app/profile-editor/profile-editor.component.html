@@ -1,0 +1,105 @@
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+    <div class="name">
+        <label>
+            First Name:
+            <input type="text" formControlName="firstName" autofocus ngModel pattern="[a-zA-Z ]*"><br>
+        </label>
+
+        <div
+            *ngIf="profileForm.get('firstName')?.invalid">
+            Name can be from A-Z
+        </div>
+        <div *ngIf="profileForm.get('firstName')?.errors?.required">
+            First Name is required
+        </div>
+        <ng-template #reqBlock>
+            <div></div>
+        </ng-template>
+
+        <div *ngIf="profileForm.get('firstName')?.errors?.maxlength">
+            First Name cannot be more than 30 characters long.
+        </div>
+
+        <div *ngIf="profileForm.get('firstName')?.errors?.minlength">
+            First Name must be at least 2 characters long.
+        </div>
+
+        <br>
+        <label>
+            Last Name:
+        </label>
+        <input type="text" formControlName="lastName"><br>
+        <div
+            *ngIf="profileForm.get('lastName')?.valid">
+        </div>
+        <div *ngIf="profileForm.get('lastName')?.errors?.required">
+            Last Name is required.
+        </div>
+        <div *ngIf="profileForm.get('lastName')?.errors?.minlength">
+            Last Name cannot be more than 30 characters long.
+        </div>
+        <div *ngIf="profileForm.get('lastName')?.errors?.minlength">
+            Last Name must be at least 2 characters long.
+        </div>
+    </div>
+    <br>
+
+    <div class="Address"><br>
+        <h3>Address</h3>
+
+        <label><br>
+            Street:
+        </label>
+        <input type="text" formControlName="street"><br>
+        <div
+            *ngIf="profileForm.get('street')?.valid && (profileForm.get('street')?.dirty || profileForm.get('street')?.touched)">
+        </div>
+        <div *ngIf="profileForm.get('street')?.errors?.required">
+            Street Name is required.
+        </div>
+
+        <label><br>
+            City:
+        </label>
+        <input type="text" formControlName="city"><br>
+        <div
+            *ngIf="profileForm.get('city')?.valid && (profileForm.get('city')?.dirty || profileForm.get('city')?.touched)">
+        </div>
+        <div *ngIf="profileForm.get('city')?.errors?.required">
+            City Name is required.
+        </div>
+
+
+        <label><br>
+            Country
+        </label>
+        <input type="text" formControlName="country"><br>
+        <div
+            *ngIf="profileForm.get('country')?.valid && (profileForm.get('country')?.dirty || profileForm.get('street')?.touched)">
+        </div>
+        <div *ngIf="profileForm.get('country')?.errors?.required">
+            Country Name is required.
+        </div>
+
+
+        <label><br>
+            Zip Code:
+        </label>
+        <input type="number" formControlName="zip"><br>
+        <div
+            *ngIf="profileForm.get('zip')?.valid && (profileForm.get('zip')?.dirty || profileForm.get('zip')?.touched)">
+        </div>
+        <div *ngIf="profileForm.get('zip')?.errors?.required">
+            Zip Code is required.
+        </div>
+
+    </div>
+
+    <p>
+        Form Status: {{ profileForm.status }}
+    </p>
+
+    <button type="submit" [disabled]="!profileForm.valid">Submit</button><br>
+
+</form>
